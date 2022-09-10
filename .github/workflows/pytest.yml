@@ -22,6 +22,7 @@ jobs:
           python-version: '3.8'
       - run: pip install poetry
       - run: poetry install
+      - run: poetry add pytest-cov
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
           CC_TEST_REPORTER_ID: 2b1e415e4aa4d4d253ae0e661f0b2546c98f878936ae8f4247c1ff59109533b9
