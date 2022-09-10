@@ -1,8 +1,5 @@
 import json
-
-
-def stringify(value):
-    return str(value).lower()
+from gendiff.stylize.format import stringify
 
 
 def generate_diff(file_path1, file_path2):
