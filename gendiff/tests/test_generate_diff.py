@@ -28,5 +28,8 @@ def test_nested_diff():
 
     json_nested1 = load_content("fixtures/file1_nested.json")
     json_nested2 = load_content("fixtures/file2_nested.json")
+    yaml_nested1 = load_content("fixtures/file1_nested.yaml")
+    yaml_nested2 = load_content("fixtures/file2_nested.yaml")
 
     assert stylish(generate_diff(json_nested1, json_nested2)) == result
+    assert stylish(generate_diff(yaml_nested1, yaml_nested2)) == result
