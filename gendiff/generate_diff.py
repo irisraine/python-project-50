@@ -1,26 +1,31 @@
-from gendiff.stylize.format import stringify
-from gendiff.parse import load_content
+from gendiff.format.stringify import stringify
 
 
-def generate_diff(file1, file2):
-    file1_content = load_content(file1)
-    file2_content = load_content(file2)
+def generate_diff(contents1, contents2):
+    keys_common = sorted(set(contents1.keys()) | set(contents2.keys()))
+    diff = []
 
-    keys_all = set(file1_content.keys()) | set(file2_content.keys())
-    keys_sorted = sorted(list(keys_all))
-    diff_list = []
-    diff_list.append("{")
-    for key in keys_sorted:
-        if key in file1_content and key in file2_content:
-            if file1_content[key] == file2_content[key]:
-                diff_list.append(f'    {key}: {stringify(file1_content[key])}')
-            else:
-                diff_list.append(f'  - {key}: {stringify(file1_content[key])}')
-                diff_list.append(f'  + {key}: {stringify(file2_content[key])}')
-        elif key in file1_content:
-            diff_list.append(f'  - {key}: {stringify(file1_content[key])}')
-        elif key in file2_content:
-            diff_list.append(f'  + {key}: {stringify(file2_content[key])}')
-    diff_list.append("}")
+    for key in keys_common:
+        value1 = stringify(contents1.get(key, "!none"))
+        value2 = stringify(contents2.get(key, "!none"))
 
-    return '\n'.join(diff_list)
+        if isinstance(value1, dict) and isinstance(value2, dict):
+            diff.append(item(key, generate_diff(value1, value2), "unchanged"))
+        elif value1 == value2:
+            diff.append(item(key, value1, "unchanged"))
+        elif not value2:
+            diff.append(item(key, value1, "deleted"))
+        elif not value1:
+            diff.append(item(key, value2, "added"))
+        else:
+            diff.append(item(key, value1, "deleted"))
+            diff.append(item(key, value2, "added"))
+    return diff
+
+
+def item(key, value, action):
+    return {
+        "key": key,
+        "value": value,
+        "action": action
+    }

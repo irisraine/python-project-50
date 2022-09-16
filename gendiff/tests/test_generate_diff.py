@@ -1,12 +1,32 @@
 from gendiff import generate_diff
+from gendiff.parse import load_content
+from gendiff.format import stylish
 
 
-def test_generate_diff():
+def test_simple_diff():
     try:
-        with open("fixtures/expected/json_plain_result.txt") as json_plain:
-            result = "\n".join(json_plain.read().splitlines())
+        with open("fixtures/expected/simple_stylish.txt") as simple_stylish:
+            result = "\n".join(simple_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
 
-    assert generate_diff("fixtures/file1.json", "fixtures/file2.json") == result
-    assert generate_diff("fixtures/file1.yaml", "fixtures/file2.yaml") == result
+    json_simple1 = load_content("fixtures/file1.json")
+    json_simple2 = load_content("fixtures/file2.json")
+    yaml_simple1 = load_content("fixtures/file1.yaml")
+    yaml_simple2 = load_content("fixtures/file2.yaml")
+
+    assert stylish(generate_diff(json_simple1, json_simple2)) == result
+    assert stylish(generate_diff(yaml_simple1, yaml_simple2)) == result
+
+
+def test_nested_diff():
+    try:
+        with open("fixtures/expected/nested_stylish.txt") as nested_stylish:
+            result = "\n".join(nested_stylish.read().splitlines())
+    except FileNotFoundError:
+        return "File doesn't exist"
+
+    json_nested1 = load_content("fixtures/file1_nested.json")
+    json_nested2 = load_content("fixtures/file2_nested.json")
+
+    assert stylish(generate_diff(json_nested1, json_nested2)) == result
