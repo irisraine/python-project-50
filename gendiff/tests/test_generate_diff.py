@@ -2,6 +2,15 @@ from gendiff import generate_diff
 from gendiff.parse import load_content
 from gendiff.format import stylish
 
+json_simple1 = load_content("fixtures/file1.json")
+json_simple2 = load_content("fixtures/file2.json")
+yaml_simple1 = load_content("fixtures/file1.yaml")
+yaml_simple2 = load_content("fixtures/file2.yaml")
+json_nested1 = load_content("fixtures/file1_nested.json")
+json_nested2 = load_content("fixtures/file2_nested.json")
+yaml_nested1 = load_content("fixtures/file1_nested.yaml")
+yaml_nested2 = load_content("fixtures/file2_nested.yaml")
+
 
 def test_simple_diff():
     try:
@@ -9,12 +18,6 @@ def test_simple_diff():
             result = "\n".join(simple_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
-
-    json_simple1 = load_content("fixtures/file1.json")
-    json_simple2 = load_content("fixtures/file2.json")
-    yaml_simple1 = load_content("fixtures/file1.yaml")
-    yaml_simple2 = load_content("fixtures/file2.yaml")
-
     assert stylish(generate_diff(json_simple1, json_simple2)) == result
     assert stylish(generate_diff(yaml_simple1, yaml_simple2)) == result
 
@@ -25,11 +28,5 @@ def test_nested_diff():
             result = "\n".join(nested_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
-
-    json_nested1 = load_content("fixtures/file1_nested.json")
-    json_nested2 = load_content("fixtures/file2_nested.json")
-    yaml_nested1 = load_content("fixtures/file1_nested.yaml")
-    yaml_nested2 = load_content("fixtures/file2_nested.yaml")
-
     assert stylish(generate_diff(json_nested1, json_nested2)) == result
     assert stylish(generate_diff(yaml_nested1, yaml_nested2)) == result
