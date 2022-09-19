@@ -31,4 +31,3 @@ def normalize(raw_value):
         return stringify(raw_value).strip('"')
     else:
         return raw_value
-
