@@ -2,12 +2,6 @@
 
 import argparse
 from gendiff import generate_diff
-from gendiff.format import stylish
-from gendiff.parse import load_content
-
-FORMATTERS = {
-    "STYLISH": stylish,
-}
 
 
 def main():
@@ -19,15 +13,11 @@ def main():
     parser.add_argument(
         "-f",
         "--format",
-        default="STYLISH",
+        default="stylish",
         help="set format of output"
     )
     args = parser.parse_args()
-    contents1 = load_content(args.first_file)
-    contents2 = load_content(args.second_file)
-
-    print()
-    print(FORMATTERS[args.format](generate_diff(contents1, contents2)))
+    print(generate_diff(args.first_file, args.second_file, args.format))
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-from gendiff.format.stringify import stringify
 from gendiff.format.stylish import stylish
+from gendiff.format.plain import plain
 
-__all__ = [stringify, stylish]
+__all__ = [stylish, plain]

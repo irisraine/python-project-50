@@ -1,6 +1,4 @@
 from gendiff import generate_diff
-from gendiff.parse import load_content
-from gendiff.format import stylish
 
 
 def test_simple_stylish_diff():
@@ -9,12 +7,14 @@ def test_simple_stylish_diff():
             result = "\n".join(simple_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
-    assert stylish(generate_diff(
-        load_content("fixtures/file1.json"),
-        load_content("fixtures/file2.json"))) == result
-    assert stylish(generate_diff(
-        load_content("fixtures/file1.yaml"),
-        load_content("fixtures/file2.yaml"))) == result
+    assert generate_diff(
+        "fixtures/file1.json",
+        "fixtures/file2.json",
+        "stylish") == result
+    assert generate_diff(
+        "fixtures/file1.yaml",
+        "fixtures/file2.yaml",
+        "stylish") == result
 
 
 def test_nested_stylish_diff():
@@ -23,9 +23,43 @@ def test_nested_stylish_diff():
             result = "\n".join(nested_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
-    assert stylish(generate_diff(
-        load_content("fixtures/file1_nested.json"),
-        load_content("fixtures/file2_nested.json"))) == result
-    assert stylish(generate_diff(
-        load_content("fixtures/file1_nested.yaml"),
-        load_content("fixtures/file2_nested.yaml"))) == result
+    assert generate_diff(
+        "fixtures/file1_nested.json",
+        "fixtures/file2_nested.json",
+        "stylish") == result
+    assert generate_diff(
+        "fixtures/file1_nested.yaml",
+        "fixtures/file2_nested.yaml",
+        "stylish") == result
+
+
+def test_simple_plain_diff():
+    try:
+        with open("fixtures/expected/simple_plain.txt") as simple_plain:
+            result = "\n".join(simple_plain.read().splitlines())
+    except FileNotFoundError:
+        return "File doesn't exist"
+    assert generate_diff(
+        "fixtures/file1.json",
+        "fixtures/file2.json",
+        "plain") == result
+    assert generate_diff(
+        "fixtures/file1.yaml",
+        "fixtures/file2.yaml",
+        "plain") == result
+
+
+def test_nested_plain_diff():
+    try:
+        with open("fixtures/expected/nested_plain.txt") as nested_plain:
+            result = "\n".join(nested_plain.read().splitlines())
+    except FileNotFoundError:
+        return "File doesn't exist"
+    assert generate_diff(
+        "fixtures/file1_nested.json",
+        "fixtures/file2_nested.json",
+        "plain") == result
+    assert generate_diff(
+        "fixtures/file1_nested.yaml",
+        "fixtures/file2_nested.yaml",
+        "plain") == result

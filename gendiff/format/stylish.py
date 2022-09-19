@@ -8,40 +8,57 @@ DELETE = "  - "
 
 
 def stylish(diff, depth=1):
-    format_stylish = f"{LEFT_BRACE}\n"
+    formatter = f"{LEFT_BRACE}\n"
     for item in diff:
-        key, value, action = item['key'], item['value'], item['action']
-        if isinstance(item['value'], list):
-            format_stylish += f"{indentor(depth, action)}{key}: "
-            format_stylish += f"{stylish(value, depth + 1)}\n"
-        elif isinstance(value, dict):
-            format_stylish += f"{indentor(depth, action)}{key}: {LEFT_BRACE}\n"
-            format_stylish += get_tree(value, depth + 1)
-            format_stylish += f"{indentor(depth)}{RIGHT_BRACE}\n"
+        key, value = item['key'], normalize(item['value'], depth)
+        action = item['action']
+        if action == "nested":
+            formatter += f"{indentor(depth, 'stay')}{key}: "
+            formatter += f"{stylish(value, depth + 1)}\n"
+        elif action == "added":
+            formatter += f"{indentor(depth, 'add')}{key}: {value}\n"
+        elif action == "deleted":
+            formatter += f"{indentor(depth, 'del')}{key}: {value}\n"
+        elif action == "updated":
+            formatter += f"{indentor(depth, 'del')}{key}: {value[0]}\n"
+            formatter += f"{indentor(depth, 'add')}{key}: {value[1]}\n"
         else:
-            value = value.strip('"')
-            format_stylish += f"{indentor(depth, action)}{key}: {value}\n"
-    format_stylish += f"{indentor(depth - 1)}{RIGHT_BRACE}"
-    return format_stylish
+            formatter += f"{indentor(depth, 'stay')}{key}: {value}\n"
+    formatter += f"{indentor(depth - 1)}{RIGHT_BRACE}"
+    return formatter
 
 
-def get_tree(raw, depth=0):
+def normalize(raw_value, depth):
+    if isinstance(raw_value, list):
+        return raw_value
+    if isinstance(raw_value, dict):
+        normalized_value = f"{LEFT_BRACE}\n"
+        normalized_value += get_tree(raw_value, depth + 1)
+        normalized_value += f"{indentor(depth)}{RIGHT_BRACE}"
+        return normalized_value
+    if isinstance(raw_value, tuple):
+        return normalize(raw_value[0], depth), normalize(raw_value[1], depth)
+    else:
+        return raw_value.strip('"')
+
+
+def get_tree(value, depth=0):
     tree = ""
-    for key, value in raw.items():
-        if isinstance(value, dict):
-            tree += f"{indentor(depth)}{key}: {LEFT_BRACE}\n"
-            tree += f"{get_tree(value, depth + 1)}"
+    for nested_key, nested_value in value.items():
+        if isinstance(nested_value, dict):
+            tree += f"{indentor(depth)}{nested_key}: {LEFT_BRACE}\n"
+            tree += f"{get_tree(nested_value, depth + 1)}"
             tree += f"{indentor(depth)}{RIGHT_BRACE}\n"
         else:
-            value = json.dumps(value).strip('"')
-            tree += f"{indentor(depth)}{key}: {value}\n"
+            nested_value = json.dumps(nested_value).strip('"')
+            tree += f"{indentor(depth)}{nested_key}: {nested_value}\n"
     return tree
 
 
-def indentor(depth, mode="unchanged"):
-    if mode == "added":
+def indentor(depth, mode="stay"):
+    if mode == "add":
         return INDENT * (depth - 1) + ADD
-    if mode == "deleted":
+    if mode == "del":
         return INDENT * (depth - 1) + DELETE
-    if mode == "unchanged":
+    if mode == "stay":
         return INDENT * depth
