@@ -63,3 +63,35 @@ def test_nested_plain_diff():
         "fixtures/file1_nested.yaml",
         "fixtures/file2_nested.yaml",
         "plain") == result
+
+
+def test_simple_json_diff():
+    try:
+        with open("fixtures/expected/simple_json.txt") as simple_json:
+            result = "\n".join(simple_json.read().splitlines())
+    except FileNotFoundError:
+        return "File doesn't exist"
+    assert generate_diff(
+        "fixtures/file1.json",
+        "fixtures/file2.json",
+        "json") == result
+    assert generate_diff(
+        "fixtures/file1.yaml",
+        "fixtures/file2.yaml",
+        "json") == result
+
+
+def test_nested_json_diff():
+    try:
+        with open("fixtures/expected/nested_json.txt") as nested_json:
+            result = "\n".join(nested_json.read().splitlines())
+    except FileNotFoundError:
+        return "File doesn't exist"
+    assert generate_diff(
+        "fixtures/file1_nested.json",
+        "fixtures/file2_nested.json",
+        "json") == result
+    assert generate_diff(
+        "fixtures/file1_nested.yaml",
+        "fixtures/file2_nested.yaml",
+        "json") == result

@@ -1,4 +1,5 @@
 import json
+from gendiff.helpers.stringify import stringify
 
 LEFT_BRACE = "{"
 RIGHT_BRACE = "}"
@@ -7,14 +8,14 @@ ADD = "  + "
 DELETE = "  - "
 
 
-def stylish(diff, depth=1):
+def stylish_format(diff, depth=1):
     formatter = f"{LEFT_BRACE}\n"
     for item in diff:
         key, value = item['key'], normalize(item['value'], depth)
         action = item['action']
         if action == "nested":
             formatter += f"{indentor(depth, 'stay')}{key}: "
-            formatter += f"{stylish(value, depth + 1)}\n"
+            formatter += f"{stylish_format(value, depth + 1)}\n"
         elif action == "added":
             formatter += f"{indentor(depth, 'add')}{key}: {value}\n"
         elif action == "deleted":
@@ -39,7 +40,7 @@ def normalize(raw_value, depth):
     if isinstance(raw_value, tuple):
         return normalize(raw_value[0], depth), normalize(raw_value[1], depth)
     else:
-        return raw_value.strip('"')
+        return stringify(raw_value).strip('"')
 
 
 def get_tree(value, depth=0):
