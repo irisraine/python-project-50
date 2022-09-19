@@ -9,7 +9,7 @@ FORMAT = {
 }
 
 
-def generate_diff(file_path1, file_path2, format_name="stylish_format"):
+def generate_diff(file_path1, file_path2, format_name="stylish"):
     return FORMAT[format_name](get_diff(
         load_content(file_path1),
         load_content(file_path2)))
