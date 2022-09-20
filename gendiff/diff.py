@@ -1,6 +1,3 @@
-import json
-
-
 def get_diff(contents1, contents2):
     keys_common = sorted(set(contents1.keys()) | set(contents2.keys()))
     diff = []
@@ -25,7 +22,3 @@ def item(key, value, action):
         "key": key,
         "value": value,
         "action": action}
-
-
-def stringify(value):
-    return json.dumps(value) if not isinstance(value, dict) else value

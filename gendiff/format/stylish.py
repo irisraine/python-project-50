@@ -1,5 +1,4 @@
 import json
-from gendiff.helpers.stringify import stringify
 
 LEFT_BRACE = "{"
 RIGHT_BRACE = "}"
@@ -31,16 +30,16 @@ def stylish_format(diff, depth=1):
 
 def normalize(raw_value, depth):
     if isinstance(raw_value, list):
-        return raw_value
-    if isinstance(raw_value, dict):
+        normalized_value = raw_value
+    elif isinstance(raw_value, dict):
         normalized_value = f"{LEFT_BRACE}\n"
         normalized_value += get_tree(raw_value, depth + 1)
         normalized_value += f"{indentor(depth)}{RIGHT_BRACE}"
-        return normalized_value
-    if isinstance(raw_value, tuple):
-        return normalize(raw_value[0], depth), normalize(raw_value[1], depth)
+    elif isinstance(raw_value, tuple):
+        normalized_value = normalize(raw_value[0], depth), normalize(raw_value[1], depth)
     else:
-        return stringify(raw_value).strip('"')
+        normalized_value = json.dumps(raw_value).strip('"')
+    return normalized_value
 
 
 def get_tree(value, depth=0):
@@ -57,9 +56,10 @@ def get_tree(value, depth=0):
 
 
 def indentor(depth, mode="stay"):
-    if mode == "add":
-        return INDENT * (depth - 1) + ADD
-    if mode == "del":
-        return INDENT * (depth - 1) + DELETE
     if mode == "stay":
         return INDENT * depth
+    elif mode == "add":
+        return INDENT * (depth - 1) + ADD
+    elif mode == "del":
+        return INDENT * (depth - 1) + DELETE
+

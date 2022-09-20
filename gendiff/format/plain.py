@@ -1,4 +1,4 @@
-from gendiff.helpers.stringify import stringify
+import json
 
 
 def plain_format(diff, path=""):
@@ -21,13 +21,14 @@ def plain_format(diff, path=""):
 
 def normalize(raw_value):
     if isinstance(raw_value, dict):
-        return "[complex value]"
+        normalized_value = "[complex value]"
     elif isinstance(raw_value, tuple):
-        return normalize(raw_value[0]), normalize(raw_value[1])
+        normalized_value = normalize(raw_value[0]), normalize(raw_value[1])
     elif isinstance(raw_value, str):
-        raw_value = stringify(raw_value).strip('"')
-        return f"'{raw_value}'"
+        raw_value = json.dumps(raw_value).strip('"')
+        normalized_value = f"'{raw_value}'"
     elif isinstance(raw_value, bool) or not raw_value:
-        return stringify(raw_value).strip('"')
+        normalized_value = json.dumps(raw_value).strip('"')
     else:
-        return raw_value
+        normalized_value = raw_value
+    return normalized_value

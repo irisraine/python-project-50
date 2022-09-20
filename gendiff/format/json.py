@@ -14,7 +14,7 @@ def get_dict(diff_as_list):
             formatter.setdefault(key, {
                 "action": action,
                 "value": get_dict(value)})
-        if isinstance(value, tuple):
+        elif isinstance(value, tuple):
             formatter.setdefault(key, {
                 "action": action,
                 "value": {
