@@ -36,7 +36,8 @@ def normalize(raw_value, depth):
         normalized_value += get_tree(raw_value, depth + 1)
         normalized_value += f"{indentor(depth)}{RIGHT_BRACE}"
     elif isinstance(raw_value, tuple):
-        normalized_value = normalize(raw_value[0], depth), normalize(raw_value[1], depth)
+        normalized_value = (normalize(raw_value[0], depth),
+                            normalize(raw_value[1], depth))
     else:
         normalized_value = json.dumps(raw_value).strip('"')
     return normalized_value
@@ -62,4 +63,3 @@ def indentor(depth, mode="stay"):
         return INDENT * (depth - 1) + ADD
     elif mode == "del":
         return INDENT * (depth - 1) + DELETE
-
