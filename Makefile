@@ -14,10 +14,10 @@ lint:
 	poetry run flake8 gendiff
 
 tests:
-	poetry run pytest
+	poetry run pytest -vv tests/test_gendiff.py
 
 coverage:
-	poetry run pytest --cov=gendiff --cov-report xml
+	poetry run pytest --cov=gendiff tests/test_gendiff.py --cov-report xml
 
 gendiff:
 	poetry run gendiff
