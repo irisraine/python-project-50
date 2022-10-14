@@ -28,12 +28,12 @@ def get_filepath(filename, filetype):
 
 @pytest.mark.parametrize("file1, file2, expected, format_name", test_cases)
 def test_universal_case(file1, file2, expected, format_name):
-    expected = get_filepath(expected, "result")
-    file1 = get_filepath(file1, "fixture")
-    file2 = get_filepath(file2, "fixture")
     try:
-        with open(expected) as simple_stylish:
+        with open(get_filepath(expected, "result")) as simple_stylish:
             result = "\n".join(simple_stylish.read().splitlines())
     except FileNotFoundError:
         return "File doesn't exist"
-    assert generate_diff(file1, file2, format_name) == result
+    assert generate_diff(
+        get_filepath(file1, "fixture"),
+        get_filepath(file2, "fixture"),
+        format_name) == result
