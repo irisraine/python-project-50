@@ -7,7 +7,7 @@ ADD = "  + "
 DELETE = "  - "
 
 
-def stylish_format(diff, depth=1):  # noqa: C901
+def stylish_format(diff, depth=1):
     formatter = f"{LEFT_BRACE}\n"
     for item in diff:
         key, value = item['key'], normalize(item['value'], depth)
@@ -28,7 +28,7 @@ def stylish_format(diff, depth=1):  # noqa: C901
     return formatter
 
 
-def normalize(raw_value, depth):  # noqa: C901
+def normalize(raw_value, depth):
     if isinstance(raw_value, list):
         normalized_value = raw_value
     elif isinstance(raw_value, dict):

@@ -5,7 +5,7 @@ def json_format(diff):
     return json.dumps(get_dict(diff), indent=2)
 
 
-def get_dict(diff_as_list):  # noqa: C901
+def get_dict(diff_as_list):
     formatter = {}
     for item in diff_as_list:
         key, value = item['key'], item['value']
