@@ -1,7 +1,7 @@
 import json
 
 
-def plain_format(diff, path=""):
+def plain_format(diff, path=""):  # noqa: C901
     formatter = ""
     for item in diff:
         key, value = item['key'], normalize(item['value'])
@@ -19,7 +19,7 @@ def plain_format(diff, path=""):
     return formatter.strip()
 
 
-def normalize(raw_value):
+def normalize(raw_value):  # noqa: C901
     if isinstance(raw_value, dict):
         normalized_value = "[complex value]"
     elif isinstance(raw_value, tuple):

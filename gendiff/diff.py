@@ -1,4 +1,4 @@
-def get_diff(contents1, contents2):
+def get_diff(contents1, contents2):  # noqa: C901
     keys_common = sorted(set(contents1.keys()) | set(contents2.keys()))
     diff = []
     for key in keys_common:
